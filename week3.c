@@ -1,0 +1,116 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct stack {
+    int data;
+    struct stack *next;
+};
+
+struct stack *top = NULL;
+
+// Function declarations
+struct stack *push(struct stack *, int);
+struct stack *pop(struct stack *);
+struct stack *display(struct stack *);
+int peek(struct stack *);
+
+int main() {
+    int val, option;
+
+    do {
+        printf("\n\n***** MAIN MENU *****");
+        printf("\n1. PUSH");
+        printf("\n2. POP");
+        printf("\n3. PEEK");
+        printf("\n4. DISPLAY");
+        printf("\n5. EXIT");
+        printf("\nEnter your option: ");
+        scanf("%d", &option);
+
+        switch(option) {
+            case 1:
+                printf("Enter the number to be pushed on stack: ");
+                scanf("%d", &val);
+                top = push(top, val);
+                break;
+
+            case 2:
+                top = pop(top);
+                break;
+
+            case 3:
+                val = peek(top);
+                if (val != -1)
+                    printf("The value at the top of stack is: %d", val);
+                else
+                    printf("STACK IS EMPTY");
+                break;
+
+            case 4:
+                top = display(top);
+                break;
+
+            case 5:
+                printf("Exiting...");
+                break;
+
+            default:
+                printf("Invalid option! Please enter a number between 1 and 5.");
+        }
+    } while(option != 5);
+
+    return 0;
+}
+
+// Push function
+struct stack *push(struct stack *top, int val) {
+    struct stack *ptr = (struct stack *)malloc(sizeof(struct stack));
+    if (ptr == NULL) {
+        printf("Memory allocation failed");
+        return top;
+    }
+    ptr->data = val;
+    ptr->next = top;
+    top = ptr;
+    return top;
+}
+
+// Pop function
+struct stack *pop(struct stack *top) {
+    struct stack *ptr;
+
+    if (top == NULL) {
+        printf("STACK UNDERFLOW");
+    } else {
+        ptr = top;
+        top = top->next;
+        printf("The value being deleted is: %d", ptr->data);
+        free(ptr);
+    }
+    return top;
+}
+
+// Peek function
+int peek(struct stack *top) {
+    if (top == NULL)
+        return -1;
+    else
+        return top->data;
+}
+
+// Display function
+struct stack *display(struct stack *top) {
+    struct stack *ptr = top;
+
+    if (top == NULL) {
+        printf("STACK IS EMPTY");
+    } else {
+        printf("Stack elements are:");
+        while (ptr != NULL) {
+            printf("\n%d", ptr->data);
+            ptr = ptr->next;
+        }
+    }
+    return top;
+}
+
